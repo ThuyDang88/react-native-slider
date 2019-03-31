@@ -303,7 +303,7 @@ export default class Slider extends PureComponent {
             {
               transform: [{ translateX: thumbLeft }, { translateY: 0 }],
               ...valueVisibleStyle,
-            },
+            }
           ]}
         >
           {this._renderThumbImage()}
@@ -338,7 +338,7 @@ export default class Slider extends PureComponent {
 
   _handleStartShouldSetPanResponder = (
     e: Object /* gestureState: Object */,
-  ): boolean =>
+  ): boolean => {
     // Should we become active when the user presses down on the thumb?
     return this.props.trackClickable ? true : this._thumbHitTest(e);
   };
