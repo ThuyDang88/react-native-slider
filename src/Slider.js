@@ -172,6 +172,11 @@ export default class Slider extends PureComponent {
      * Set to true to update the value whilst clicking the Slider
      */
     trackClickable : PropTypes.bool,
+    
+    /**
+     * Set to distance align left with parent view
+     */
+    distanceAlignLeft: PropTypes.number
   };
 
   static defaultProps = {
@@ -186,6 +191,7 @@ export default class Slider extends PureComponent {
     debugTouchArea: false,
     animationType: 'timing',
     trackClickable: false,
+    distanceAlignLeft: 0,
   };
 
   state = {
@@ -303,7 +309,7 @@ export default class Slider extends PureComponent {
             {
               transform: [{ translateX: thumbLeft }, { translateY: 0 }],
               ...valueVisibleStyle,
-            }
+            },
           ]}
         >
           {this._renderThumbImage()}
@@ -330,6 +336,7 @@ export default class Slider extends PureComponent {
       trackStyle,
       thumbStyle,
       trackClickable,
+      distanceAlignLeft,
       ...otherProps
     } = props;
 
@@ -338,18 +345,19 @@ export default class Slider extends PureComponent {
 
   _handleStartShouldSetPanResponder = (
     e: Object /* gestureState: Object */,
-  ): boolean => {
-    // Should we become active when the user presses down on the thumb?
-    return this.props.trackClickable ? true : this._thumbHitTest(e);
-  };
+  ): boolean =>{
+     // Should we become active when the user presses down on the thumb?
+     return this.props.trackClickable ? true : this._thumbHitTest(e);
+  }
+   
 
   _handleMoveShouldSetPanResponder(/* e: Object, gestureState: Object */): boolean {
     // Should we become active when the user moves a touch over the thumb?
     return false;
   }
 
-  _handlePanResponderGrant = (e: Object, gestureState: Object) => {
-    this._previousLeft = this.props.trackClickable ? gestureState.x0 - (this.state.thumbSize.width/2) : this._getThumbLeft(this._getCurrentValue());
+  _handlePanResponderGrant = ( e: Object, gestureState: Object) => {
+    this._previousLeft = this.props.trackClickable ? (gestureState.x0 - (this.state.thumbSize.width/2) - this.props.distanceAlignLeft) : this._getThumbLeft(this._getCurrentValue());
     this._fireChangeEvent('onSlidingStart');
   };
 
